@@ -1,3 +1,9 @@
+```javascript
+/**
+ * Express application setup and configuration.
+ * Sets up CORS, JSON parsing, URL encoding, static file serving, cookie parsing,
+ * and mounts the user router at "/api/v1/users".
+ */
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -19,3 +25,4 @@ import userRouter from './routes/user.routes.js'
 
 app.use("/api/v1/users",userRouter) //http://localhoast:4000/api/vi/users/register
 export {app}
+```

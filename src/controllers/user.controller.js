@@ -1,3 +1,4 @@
+```javascript
 import {asyncHandler} from '../utils/asyncHandler.js'
 import {ApiError} from '../utils/apiError.js'
 import  {User}  from '../modles/user.models.js'
@@ -6,6 +7,13 @@ import {ApiResponse} from '../utils/apiResponse.js'
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
 
+/**
+ * Generates access and refresh tokens for a user.
+ *
+ * @param userId - The unique identifier of the user.
+ * @returns An object containing the access and refresh tokens.
+ * @throws {ApiError} If there is an error during token generation.
+ */
 const generateAccessandRereshToken = async(userId) =>{
     try{
         const user = await User.findById(userId)
@@ -21,6 +29,14 @@ const generateAccessandRereshToken = async(userId) =>{
         throw new ApiError (500,"Something went wrong while Logging in")
     }
 }
+/**
+ * Registers a new user.
+ *
+ * @param req - The HTTP request object.
+ * @param res - The HTTP response object.
+ * @returns A JSON response with the created user and success message.
+ * @throws {ApiError} If validation fails, user already exists, or registration fails.
+ */
 const registerUser = asyncHandler(async(req,res)=>{
     
     /* Steps
@@ -101,6 +117,14 @@ return res.status(201).json(
 )
 })
     
+/**
+ * Logs in an existing user.
+ *
+ * @param req - The HTTP request object.
+ * @param res - The HTTP response object.
+ * @returns A JSON response with the logged-in user, tokens, and success message.
+ * @throws {ApiError} If credentials are invalid or user is not found.
+ */
 const loginUser = asyncHandler (async (req,res)=>{
     //req.body data
     //check username and email is present or not
@@ -155,6 +179,13 @@ const loginUser = asyncHandler (async (req,res)=>{
     )
 })
 
+/**
+ * Logs out a user by clearing their refresh token and cookies.
+ *
+ * @param req - The HTTP request object.
+ * @param res - The HTTP response object.
+ * @returns A JSON response indicating successful logout.
+ */
 const logoutUser = asyncHandler(async (req,res)=>{
     await User.findByIdAndUpdate(
         req.user._id,
@@ -176,6 +207,14 @@ const logoutUser = asyncHandler(async (req,res)=>{
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(200,{}, "User Logged Out"))
 })
+/**
+ * Refreshes the access token using the refresh token.
+ *
+ * @param req - The HTTP request object.
+ * @param res - The HTTP response object.
+ * @returns A JSON response with the new access and refresh tokens.
+ * @throws {ApiError} If the refresh token is invalid, expired, or unauthorized.
+ */
 const refreshAccessToken = asyncHandler(async (req,res)=>{
 const incomingRefreshToken = req.cookies.
     refreshToken||req.body.refreshToken
@@ -218,3 +257,4 @@ const incomingRefreshToken = req.cookies.
     }
 })
 export {registerUser, logoutUser, loginUser}
+```
